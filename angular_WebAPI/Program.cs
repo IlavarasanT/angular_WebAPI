@@ -11,13 +11,31 @@ builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 
-//db connection
+//db connection for my personal user table 
+//builder.Services.AddDbContext<ApiDBContext>(options =>
+//options.UseSqlServer(builder.Configuration.GetConnectionString("dbConnectionStrings")));
+
+//db connection for angular project
 builder.Services.AddDbContext<ApiDBContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("dbConnectionStrings")));
 
+//enable cors policy for hitting api from different source
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
+
+
 var app = builder.Build();
 
-
+app.UseCors(x => x
+       .SetIsOriginAllowed(origin => true)
+       .AllowAnyMethod()
+       .AllowAnyHeader()
+       .AllowCredentials());
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -32,3 +50,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

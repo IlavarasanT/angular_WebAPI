@@ -9,5 +9,6 @@ namespace angular_WebAPI.Data
         {
         }
         public DbSet<user_table> user_table { get; set; }
+        public DbSet<Department> Department { get; set; }
     }
 }
